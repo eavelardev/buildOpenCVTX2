@@ -1,29 +1,21 @@
-# buildOpenCVTX2
+# installOpenCVTX2
 Build and install OpenCV for the NVIDIA Jetson TX2
 
-These scripts build OpenCV version 3.3 for the NVIDIA Jetson TX2 Development Kit.
+These scripts build OpenCV version 3.3.1 for the NVIDIA Jetson TX2 Development Kit.
 
 JetPack gives the option of installing OpenCV4Tegra (OpenCV 2.4) with accelerated CPU functions. OpenCV4Tegra is now deprecated. Here is a recipe for building OpenCV from source.
 
-OpenCV is a rich environment which can be configured in many different ways. You should configure OpenCV for your needs, by modifying the build file "buildOpenCV.sh". Note that selecting different options in OpenCV may also have additional library requirements which are not included in these scripts.
+OpenCV is a rich environment which can be configured in many different ways. You should configure OpenCV for your needs, by modifying the build file "installOpenCV.sh". Note that selecting different options in OpenCV may also have additional library requirements which are not included in these scripts.
 
-To run the the build file
+This installation works without install OpenCV with JetPack. If you have OpenCV4Tegra installed, you maybe need uninstall with
 
-$ ./buildOpenCV.sh
+$ sudo apt purge -y libopencv4tegra*
 
-The build system has been known at times to have issues. It's worth doing a sanity check after the build is complete:
+To run the install file
 
-$ cd $HOME/opencv/build
+$ chmod +x installOpenCV.sh
 
-$ make
-
-This should ensure that everything has been built.
-
-After this, you can install the new build:
-
-$ cd $HOME/opencv/build
-
-$ sudo make install
+$ ./installOpenCV.sh
 
 ## Notes
 There may be issues if have both OpenCV4Tegra and a regular OpenCV build installed at the same time. Most people do not install OpenCV4Tegra on their machine if using the OpenCV build.
@@ -43,7 +35,7 @@ https://devtalk.nvidia.com/default/topic/965134/opencv-3-1-compilation-on-tx1-le
 ## Release Notes
 September 2017
 * L4T 28.1
-* OpenCV 3.3
+* OpenCV 3.3.1
 * GStreamer support added to build script
 * GStreamer OpenCV examples using the Jetson onboard camera 
 
