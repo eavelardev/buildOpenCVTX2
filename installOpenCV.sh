@@ -5,6 +5,7 @@
 ocv=3.3.1
 ocv_file=opencv-$ocv.zip
 ocv_extra_file=opencv_extra-$ocv.zip
+ocv_contrib_file=opencv_contrib-$ocv.zip
 
 # Default mode is 3
 jetson_mode=$(sudo nvpmodel -q | sed -n '2p')
@@ -54,17 +55,17 @@ cd $HOME
 if [ ! -e $ocv_file ]; then
     wget https://github.com/opencv/opencv/archive/$ocv.zip -O $ocv_file --no-check-certificate
 fi
-
 unzip -q $ocv_file
 
 if [ ! -e $ocv_extra_file ]; then
     wget https://github.com/opencv/opencv_extra/archive/$ocv.zip -O $ocv_extra_file --no-check-certificate
 fi
-
 unzip -q $ocv_extra_file
 
-mkdir opencv-$ocv/build
-cd opencv-$ocv/build
+if [ ! -e $ocv_contrib_file ]; then
+    wget https://github.com/opencv/opencv_contrib/archive/$ocv.zip -O $ocv_contrib_file --no-check-certificate
+fi
+unzip -q $ocv_contrib_file
 
 # OpenCV dependencies
 sudo apt install -y \
@@ -75,7 +76,11 @@ sudo apt install -y \
     liblapacke-dev \
     libopenblas-dev \
     doxygen \
-    pylint
+    pylint \
+    qt5-default
+
+mkdir opencv-$ocv/build
+cd opencv-$ocv/build
     
 # Jetson TX2 
 cmake \
@@ -107,10 +112,14 @@ cmake \
     -DCUDA_ARCH_BIN=6.2 \
     -DCUDA_ARCH_PTX="" \
     -DINSTALL_C_EXAMPLES=ON \
+    -DINSTALL_PYTHON_EXAMPLES=ON \
+    -DWITH_QT=ON \
     -DINSTALL_TESTS=ON \
     -DOPENCV_TEST_DATA_PATH=../opencv_extra-$ocv/testdata \
+    -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-$ocv/modules \
     ../
 
+make -j6
 make -j6
 make -j6
 sudo make install
